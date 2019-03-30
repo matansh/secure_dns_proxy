@@ -16,8 +16,9 @@ class TlsDnsResolver(server.BaseResolver):
 
 
 if __name__ == '__main__':
-    udp_server = server.DNSServer(resolver=TlsDnsResolver(), address='127.0.0.1', tcp=False)
-    tcp_server = server.DNSServer(resolver=TlsDnsResolver(), address='127.0.0.1', tcp=True)
+    serve_address = '0.0.0.0'
+    udp_server = server.DNSServer(resolver=TlsDnsResolver(), address=serve_address, tcp=False)
+    tcp_server = server.DNSServer(resolver=TlsDnsResolver(), address=serve_address, tcp=True)
 
     try:
         logging.info('starting udp DNS server')

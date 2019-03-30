@@ -37,7 +37,7 @@ class DnsUdpHandler(BaseRequestHandler):
 
 if __name__ == '__main__':
     logging.info('starting DNS server')
-    serving_address = ('127.0.0.1', 53)
+    serving_address = ('0.0.0.0', 53)
     tcp_server = ReusableTCPServer(serving_address, DnsTcpHandler)
     udp_server = ReusableUDPServer(serving_address, DnsUdpHandler)
 

@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  open_source_implementation:
+    build: .
+    image: secure_dns
+    ports:
+      - target: 53
+        published: 4001
+        protocol: tcp
+        mode: host
+    command: python -m open_source_implementation
+
+  open_source_implementation_udp:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4002
+        protocol: udp
+        mode: host
+    command: python -m open_source_implementation
+
+  socketserver_implementation:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4003
+        protocol: tcp
+        mode: host
+    command: python -m socketserver_implementation
+
+  socketserver_implementation_udp:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4004
+        protocol: udp
+        mode: host
+    command: python -m socketserver_implementation
+
