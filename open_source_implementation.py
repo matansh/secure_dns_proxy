@@ -1,37 +1,18 @@
 import logging
 import os
-import socket
-import ssl
-import struct
 import time
 
-import certifi
-from dnslib import DNSRecord, server
+from dnslib import server
+
+from common import cloudflare_dns_over_tls
 
 logging.root.setLevel(os.getenv('LOGGING_LEVEL', logging.DEBUG))
-CLOUDFLARE_DNS = '1.1.1.1'
-context = ssl.create_default_context()
-context.load_verify_locations(certifi.where())
 
 
 class TlsDnsResolver(server.BaseResolver):
     def resolve(self, request, handler):
         logging.debug('got DNS request: \n%s', request)
-        with socket.create_connection((CLOUDFLARE_DNS, 853)) as sock:
-            with context.wrap_socket(sock, server_hostname=CLOUDFLARE_DNS) as ssock:
-                data = request.pack()
-                if len(data) > 65535:
-                    raise ValueError(f'Packet too long: {len(data)}')
-                data = struct.pack('!H', len(data)) + data
-                ssock.sendall(data)
-                response = ssock.recv(8192)
-                length = struct.unpack('!H', bytes(response[:2]))[0]
-                while len(response) - 2 < length:
-                    response += ssock.recv(8192)
-                response = response[2:]
-                dns_response = DNSRecord.parse(response)
-                logging.debug('got DNS response from cloudflare: \n%s', dns_response)
-                return dns_response
+        return cloudflare_dns_over_tls(request)
 
 
 if __name__ == '__main__':
