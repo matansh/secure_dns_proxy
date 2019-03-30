@@ -22,10 +22,10 @@ class TlsDnsResolver(server.BaseResolver):
                 data = request.pack()
                 if len(data) > 65535:
                     raise ValueError(f'Packet too long: {len(data)}')
-                data = struct.pack("!H", len(data)) + data
+                data = struct.pack('!H', len(data)) + data
                 ssock.sendall(data)
                 response = ssock.recv(8192)
-                length = struct.unpack("!H", bytes(response[:2]))[0]
+                length = struct.unpack('!H', bytes(response[:2]))[0]
                 while len(response) - 2 < length:
                     response += ssock.recv(8192)
                 response = response[2:]
