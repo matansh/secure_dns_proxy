@@ -30,7 +30,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         logging.error('gracefully tearing down DNS server')
         pass
-    except:
+    except Exception:
         logging.exception('Fatal error in DNS server execution')
         pass
     finally:
