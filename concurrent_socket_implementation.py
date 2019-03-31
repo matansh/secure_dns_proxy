@@ -13,6 +13,7 @@ logging.root.setLevel(os.getenv('LOGGING_LEVEL', logging.DEBUG))
 
 
 def udp_reader(sock, _queue: Queue):
+    """ reads incoming dns queries from udp port, queues for future resolving """
     logging.info('starting UDP DNS reader')
     sock.bind(ADDRESS)
     while True:
@@ -20,11 +21,12 @@ def udp_reader(sock, _queue: Queue):
             dns_request, client_address = get_dns_request_over_udp(sock)
             _queue.put((dns_request, client_address))
         except:
-            logging.exception('ERROR')
+            logging.exception('ERROR reading from udp sock')
             continue
 
 
 def udp_writer(sock, _queue: Queue):
+    """ resolves queued dns queries, responds over udp port """
     logging.info('starting UDP DNS writer')
     while True:
         try:
@@ -33,11 +35,12 @@ def udp_writer(sock, _queue: Queue):
             sock.sendto(dns_response, client_address)
             _queue.task_done()
         except:
-            logging.exception('ERROR')
+            logging.exception('ERROR writing to udp sock')
             continue
 
 
 def tcp_reader(sock, _queue: Queue):
+    """ reads incoming dns queries from tcp port, queues for future resolving """
     logging.info('starting TCP DNS reader')
     sock.bind(ADDRESS)
     sock.listen(5)
@@ -47,11 +50,15 @@ def tcp_reader(sock, _queue: Queue):
             dns_request = get_dns_request_over_tcp(connection)
             _queue.put((dns_request, connection))
         except:
-            logging.exception('ERROR')
+            logging.exception('ERROR reading from tcp sock')
             continue
 
 
 def tcp_writer(_queue: Queue):
+    """
+    resolves queued dns queries, responds over udp port
+    no sock parameter needed here as tcp response is over new sock object created at communication start
+    """
     logging.info('starting TCP DNS writer')
     while True:
         try:
@@ -61,7 +68,7 @@ def tcp_writer(_queue: Queue):
             connection.sendall(response)
             _queue.task_done()
         except:
-            logging.exception('ERROR')
+            logging.exception('ERROR writing to tcp sock')
             continue
 
 

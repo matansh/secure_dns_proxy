@@ -18,9 +18,13 @@ def udp_server():
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind(ADDRESS)
         while True:
-            dns_request, client_address = get_dns_request_over_udp(sock)
-            dns_response = cloudflare_dns_over_tls(dns_request).pack()
-            sock.sendto(dns_response, client_address)
+            try:
+                dns_request, client_address = get_dns_request_over_udp(sock)
+                dns_response = cloudflare_dns_over_tls(dns_request).pack()
+                sock.sendto(dns_response, client_address)
+            except:
+                logging.exception('ERROR in udp server')
+                continue
 
 
 def tcp_server():
@@ -31,11 +35,15 @@ def tcp_server():
         sock.bind(ADDRESS)
         sock.listen(5)
         while True:
-            conn, address = sock.accept()
-            dns_request = get_dns_request_over_tcp(conn)
-            dns_response = cloudflare_dns_over_tls(dns_request).pack()
-            response = struct.pack('!H', len(dns_response)) + dns_response
-            conn.sendall(response)
+            try:
+                conn, address = sock.accept()
+                dns_request = get_dns_request_over_tcp(conn)
+                dns_response = cloudflare_dns_over_tls(dns_request).pack()
+                response = struct.pack('!H', len(dns_response)) + dns_response
+                conn.sendall(response)
+            except:
+                logging.exception('ERROR in tcp server')
+                continue
 
 
 if __name__ == '__main__':

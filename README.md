@@ -68,7 +68,7 @@ DNS service to "upstream" requests back to our dns-over-tls
 is still exposed and vulnerable to attack. 
 - public certificate used to authenticate communication with cloudflare. 
   - creating a service to service auth schema, where our dns-over-tls service would have its own short lived encryption secrets would be better.
-- Faulty DNS records? we could validate the resolved name from multiple providers to be sure that the DNS recoded was not tampered with at the source.
+- The possibility of faulty DNS records, we could validate the resolved name from multiple providers to be sure that the DNS recoded was not tampered with at the source.
 - The issue of trust, do we as an organisation trust cloudflare with our DNS queries? (cloudflare is an american company that may not conform to european privacy laws). 
 
 ## Possible improvements

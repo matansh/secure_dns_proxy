@@ -11,7 +11,6 @@ logging.root.setLevel(os.getenv('LOGGING_LEVEL', logging.DEBUG))
 
 class TlsDnsResolver(server.BaseResolver):
     def resolve(self, request, handler):
-        logging.debug('got DNS request: \n%s', request)
         return cloudflare_dns_over_tls(request)
 
 
