@@ -37,3 +37,20 @@ services:
         mode: host
     command: python -m socketserver_implementation
 
+  socket_implementation:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4005
+        protocol: tcp
+        mode: host
+    command: python -m socket_implementation
+
+  socket_implementation_udp:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4006
+        protocol: udp
+        mode: host
+    command: python -m socket_implementation

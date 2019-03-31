@@ -13,6 +13,16 @@ This implementation utilizes python's built-in high level `socketserver` api.
 
 The `socketserver` library abstracts away a lot of "boilerplate" code needed to serve our interface. 
 
+#### `socket_implmentation.py`
+This implementation utilizes python's built-in low level `socket` api.
+
+As this implementation does not use any abstraction layers like `socketserver` it implements all required steps in 
+order to accept and return tcp/udp connections.
+
+I implemented a very strait forward approach to serving the api's: in an endless loop -> read from socket.
+
+For anything fancier then this "simple" implementation I would recommend using using higher level api's / open source utils.
+
 ## Execution
 #### docker compose
 Note: docker compose does not currently support exposing both tcp and udp for a single port.
@@ -32,6 +42,13 @@ As a result I had to hard code the exposed container ports.
 - $`pip install -r requirements.txt`
 - $`python -m <server_option>_implementation.py`
 
+## Running the tests
+- install python 3.7 from www.python.org
+- $`python3 -m venv venv`
+- $`. venv/bin/activate`
+- $`pip install -r requirements.txt`
+- $`pytest tests/`
+
 ## Production deployment in a micro-service architecture
 - Depending on the scale of requests needed i would consider serving the dns-over-tls service behind some load balancing mechanism.
 - All other services should be configured to utilize the dns-over-tls services ip (or the ip of the load-balancer) as their name resolver
@@ -50,6 +67,8 @@ is still exposed and vulnerable to attack.
 
 ## Possible improvements
 - Single threaded async with python's `asyncio`
+- Currently, for the sake of logging, we decode the incoming dns query and encode it back again before sending it to cloudflare
+  - In a real production environment we would not waste this "meaningless" compute time
 
 ## Implementation notes
 this code snippet:

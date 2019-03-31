@@ -11,11 +11,16 @@ context = ssl.create_default_context()
 context.load_verify_locations(certifi.where())
 
 
+def get_dns_request_over_udp(sock) -> (DNSRecord, str):
+    data, client_address = sock.recvfrom(8192)
+    return DNSRecord.parse(data), client_address
+
+
 def get_dns_request_over_tcp(sock) -> DNSRecord:
     response = sock.recv(8192).strip()
     length = struct.unpack('!H', bytes(response[:2]))[0]
     while len(response) - 2 < length:
-        new_data = sock.recv(8192)
+        new_data = sock.recv(8192).strip()
         if not new_data:
             break
         response += new_data
