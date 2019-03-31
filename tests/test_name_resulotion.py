@@ -9,7 +9,9 @@ from tests.dns_client import DnsClient
     (4003, True),
     (4004, False),
     (4005, True),
-    (4006, False)
+    (4006, False),
+    (4007, True),
+    (4008, False)
 ])
 class TestDnsSolutions:
     @pytest.mark.parametrize('name', ['bad.url.com.nonexsisting', '127.0.0.1'])

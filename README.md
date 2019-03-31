@@ -23,6 +23,12 @@ I implemented a very strait forward approach to serving the api's: in an endless
 
 For anything fancier then this "simple" implementation I would recommend using using higher level api's / open source utils.
 
+#### `concurrent_socket_implementation.py`
+This is the same implementation as `socket_implmentation.py` only served executed as consumer / producer 
+- consumer: reads dns requests from its assigned "wire" (tcp/udp) then queue's a new task for it
+- producer: reads tasks from our thread safe queue, resolves the DNS name via cloudflare and responds over its assigned "wire"
+
+
 ## Execution
 #### docker compose
 Note: docker compose does not currently support exposing both tcp and udp for a single port.

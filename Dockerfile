@@ -7,4 +7,4 @@ COPY common.py .
 COPY *_implementation.py ./
 
 EXPOSE 53
-CMD python -m socket_implmentation.py
+CMD python -m concurrent_socket_implementation

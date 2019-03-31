@@ -54,3 +54,21 @@ services:
         protocol: udp
         mode: host
     command: python -m socket_implementation
+
+  concurrent_socket_implementation:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4007
+        protocol: tcp
+        mode: host
+    command: python -m concurrent_socket_implementation
+
+  concurrent_socket_implementation_udp:
+    image: secure_dns:latest
+    ports:
+      - target: 53
+        published: 4008
+        protocol: udp
+        mode: host
+    command: python -m concurrent_socket_implementation
